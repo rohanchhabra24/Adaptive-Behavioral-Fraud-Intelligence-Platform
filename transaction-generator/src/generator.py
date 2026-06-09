@@ -27,19 +27,22 @@ def control_listener():
     consumer = KafkaConsumer(
         "system-control",
         bootstrap_servers=[KAFKA_BROKER],
-        value_deserializer=lambda x: x.decode('utf-8'),
+        value_deserializer=lambda x: json.loads(x.decode('utf-8')),
         auto_offset_reset='latest',
         group_id='generator-control'
     )
     logger.info("Listening for system-control signals...")
     for msg in consumer:
-        signal = msg.value.strip().upper()
-        if signal == "START":
-            IS_RUNNING = True
-            logger.info("✅ Received START signal - transactions flowing!")
-        elif signal == "STOP":
-            IS_RUNNING = False
-            logger.info("⏹️  Received STOP signal - stopping transactions!")
+        try:
+            signal = msg.value.get("command", "").strip().upper()
+            if signal == "START":
+                IS_RUNNING = True
+                logger.info("✅ Received START signal - transactions flowing!")
+            elif signal == "STOP":
+                IS_RUNNING = False
+                logger.info("⏹️  Received STOP signal - stopping transactions!")
+        except Exception as e:
+            logger.error(f"Error parsing control message: {e}")
 
 def main():
     # Start the control listener in a background thread
