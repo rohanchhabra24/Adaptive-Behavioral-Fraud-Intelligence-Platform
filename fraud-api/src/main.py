@@ -2,6 +2,7 @@ from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio, json, os, random
 from kafka import KafkaConsumer
+from src.routers import control
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -24,3 +25,5 @@ async def websocket_alerts(websocket: WebSocket):
                 if msg.value['amount'] > 50000 or msg.value['location'] == 'International':
                     await websocket.send_json({"type": "NEW_ALERT", "data": {"transaction_id": msg.value['transaction_id'], "risk_score": 85, "reason": "High Risk Detected", "severity": "HIGH RISK"}})
         await asyncio.sleep(0.5)
+
+app.include_router(control.router, prefix="/api/v1/control", tags=["Control"])
