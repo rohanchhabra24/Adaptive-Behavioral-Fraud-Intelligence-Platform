@@ -61,6 +61,12 @@ services:
       KAFKA_BROKER: kafka:29092
     depends_on: [kafka]
 
+  flink-jobs:
+    build: ./flink-jobs
+    environment:
+      KAFKA_BROKER: kafka:29092
+    depends_on: [kafka, jobmanager]
+
   fraud-api:
     build: ./fraud-api
     ports: ["8000:8000"]
