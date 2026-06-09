@@ -20,8 +20,20 @@ def main():
     t_env.execute_sql(sink_ddl)
     process_sql = """
         INSERT INTO fraud_alerts
-        SELECT transaction_id, (behavior_score + 10.0 + 20.0) AS risk_score, CASE WHEN (behavior_score + 30.0) > 70 THEN 'HIGH RISK' ELSE 'LOW RISK' END AS severity, 'Anomaly detected in user behavior' AS reason
-        FROM behavior_scored WHERE (behavior_score + 30.0) > 70
+        SELECT 
+            transaction_id, 
+            behavior_score * 5.0 AS risk_score, 
+            CASE 
+                WHEN (behavior_score * 5.0) >= 80 THEN 'HIGH RISK' 
+                WHEN (behavior_score * 5.0) >= 50 THEN 'MEDIUM RISK'
+                ELSE 'LOW RISK' 
+            END AS severity, 
+            CASE 
+                WHEN (behavior_score * 5.0) >= 80 THEN 'High velocity anomalous spend detected'
+                WHEN (behavior_score * 5.0) >= 50 THEN 'Slightly abnormal velocity pattern'
+                ELSE 'Normal behavior'
+            END AS reason
+        FROM behavior_scored
     """
     t_env.execute_sql(process_sql)
 if __name__ == '__main__':
