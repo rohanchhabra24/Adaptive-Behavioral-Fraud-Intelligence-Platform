@@ -7,12 +7,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:8000',
+        target: 'http://fraud-api:8000',
         changeOrigin: true,
       },
       '/ws': {
-        target: process.env.VITE_API_URL || 'ws://localhost:8000',
+        target: 'ws://fraud-api:8000',
         ws: true,
+        changeOrigin: true,
       }
     }
   }

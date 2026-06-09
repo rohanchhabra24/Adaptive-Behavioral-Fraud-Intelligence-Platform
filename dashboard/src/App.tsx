@@ -7,21 +7,28 @@ function App() {
   const [activeTab, setActiveTab] = useState('control')
   const [generatorRunning, setGeneratorRunning] = useState(false)
 
-  // Determine WebSocket URL relative to the current host
-  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-  const wsHost = window.location.host
-  
   useEffect(() => {
-    // In dev mode (localhost:5173), Vite proxies /ws to 8000
-    // In Codespaces, window.location.host includes the proxy port seamlessly
-    const wsMetrics = new WebSocket(`${wsProtocol}//${wsHost}/ws/metrics`)
-    const wsAlerts = new WebSocket(`${wsProtocol}//${wsHost}/ws/alerts`)
+    // Connect to websockets through the current host (which proxies to fraud-api:8000)
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+    const host = window.location.host
+    const metricsUrl = `${protocol}//${host}/ws/metrics`
+    const alertsUrl = `${protocol}//${host}/ws/alerts`
     
+    console.log('🔌 WebSocket URLs:', { metricsUrl, alertsUrl })
+    
+    const wsMetrics = new WebSocket(metricsUrl)
+    const wsAlerts = new WebSocket(alertsUrl)
+    
+    wsMetrics.onopen = () => console.log('✅ Metrics WS connected')
+    wsMetrics.onerror = (e) => console.error('❌ Metrics WS error:', e)
     wsMetrics.onmessage = (e) => { const d = JSON.parse(e.data); if (d.type === 'METRIC_UPDATE') setMetrics({ tps: d.tps, lag: d.consumer_lag }) }
+    
+    wsAlerts.onopen = () => console.log('✅ Alerts WS connected')
+    wsAlerts.onerror = (e) => console.error('❌ Alerts WS error:', e)
     wsAlerts.onmessage = (e) => { const p = JSON.parse(e.data); if (p.type === 'NEW_ALERT') setAlerts((prev) => [p.data, ...prev].slice(0, 50)) }
     
     return () => { wsMetrics.close(); wsAlerts.close() }
-  }, [wsProtocol, wsHost])
+  }, [])
 
   const handleControl = async (action: 'start' | 'stop') => {
     try {

@@ -17,7 +17,7 @@ async def websocket_metrics(websocket: WebSocket):
 @app.websocket("/ws/alerts")
 async def websocket_alerts(websocket: WebSocket):
     await websocket.accept()
-    consumer = KafkaConsumer("transaction-raw", bootstrap_servers=[os.getenv("KAFKA_BROKER", "kafka:29092")], value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+    consumer = KafkaConsumer("transaction-raw", bootstrap_servers=[os.getenv("KAFKA_BROKER", "kafka:29092")], value_deserializer=lambda x: json.loads(x.decode('utf-8')), auto_offset_reset='earliest', group_id=None)
     while True:
         records = consumer.poll(timeout_ms=100)
         for tp, messages in records.items():
