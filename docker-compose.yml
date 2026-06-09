@@ -36,6 +36,7 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
+        jobmanager.memory.process.size: 512m
 
   taskmanager:
     image: flink:1.17.1-scala_2.12
@@ -45,7 +46,8 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 4
+        taskmanager.numberOfTaskSlots: 2
+        taskmanager.memory.process.size: 1024m
 
   transaction-generator:
     build: ./transaction-generator
@@ -55,11 +57,7 @@ services:
       FRAUD_RATE: 0.05
     depends_on: [kafka]
 
-  ml-engine:
-    build: ./ml-engine
-    environment:
-      KAFKA_BROKER: kafka:29092
-    depends_on: [kafka]
+
 
   flink-jobs:
     build: ./flink-jobs
