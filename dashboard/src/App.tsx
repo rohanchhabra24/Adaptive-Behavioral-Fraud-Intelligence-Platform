@@ -52,7 +52,7 @@ function App() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
             Fraud Intelligence Platform
           </Typography>
-          <Tabs value={activeTab} onChange={(e, val) => setActiveTab(val)}>
+          <Tabs value={activeTab} onChange={(_e, val) => setActiveTab(val)}>
             <Tab icon={<Speed />} iconPosition="start" label="Control" />
             <Tab icon={<Router />} iconPosition="start" label="Kafka Stream" />
             <Tab icon={<Insights />} iconPosition="start" label="Intelligence" />
@@ -65,12 +65,12 @@ function App() {
         {activeTab === 0 && (
           <Card elevation={2} sx={{ maxWidth: 600, mx: 'auto', p: 2, borderRadius: 2 }}>
             <CardContent>
-              <Typography variant="h5" fontWeight="bold" gutterBottom>Transaction Generator Control</Typography>
+              <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>Transaction Generator Control</Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
                 Start the simulated transaction stream to inject behavior events into Kafka.
               </Typography>
               
-              <Box display="flex" gap={2} mb={4}>
+              <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
                 <Button 
                   variant="contained" 
                   color="success" 
@@ -95,8 +95,8 @@ function App() {
                 </Button>
               </Box>
 
-              <Box p={2} bgcolor="#f8fafc" borderRadius={1} border={1} borderColor="#e2e8f0" display="flex" justifyContent="space-between">
-                <Typography fontWeight="bold">Current Status:</Typography>
+              <Box sx={{ p: 2, bgcolor: '#f8fafc', borderRadius: 1, border: 1, borderColor: '#e2e8f0', display: 'flex', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 'bold' }}>Current Status:</Typography>
                 <Chip 
                   label={generatorRunning ? "RUNNING" : "STOPPED"} 
                   color={generatorRunning ? "success" : "default"}
@@ -112,28 +112,28 @@ function App() {
         {activeTab === 1 && (
           <Card elevation={2} sx={{ borderRadius: 2 }}>
             <CardContent>
-              <Box display="flex" justifyContent="space-between" mb={6}>
-                <Typography variant="h5" fontWeight="bold">Live Stream Observatory</Typography>
-                <Box display="flex" gap={4}>
-                  <Box textAlign="center">
-                    <Typography variant="caption" color="text.secondary" fontWeight="bold">LIVE TPS</Typography>
-                    <Typography variant="h4" color="primary" fontWeight="bold">{metrics.tps.toLocaleString()}</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 6 }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>Live Stream Observatory</Typography>
+                <Box sx={{ display: 'flex', gap: 4 }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'bold' }}>LIVE TPS</Typography>
+                    <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold' }}>{Number(metrics.tps || 0).toLocaleString()}</Typography>
                   </Box>
-                  <Box textAlign="center">
-                    <Typography variant="caption" color="text.secondary" fontWeight="bold">CONSUMER LAG</Typography>
-                    <Typography variant="h4" color="success.main" fontWeight="bold">{metrics.lag}</Typography>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'bold' }}>CONSUMER LAG</Typography>
+                    <Typography variant="h4" color="success.main" sx={{ fontWeight: 'bold' }}>{metrics.lag}</Typography>
                   </Box>
                 </Box>
               </Box>
 
-              <Box position="relative" height={250} bgcolor="#f8fafc" borderRadius={2} border={1} borderColor="#e2e8f0" display="flex" alignItems="center" justifyContent="space-between" px={6} overflow="hidden">
-                <Box zIndex={1} display="flex" flexDirection="column" alignItems="center" p={2} bgcolor="white" borderRadius={2} border={1} borderColor="#e2e8f0" boxShadow={1}>
+              <Box sx={{ position: 'relative', height: 250, bgcolor: '#f8fafc', borderRadius: 2, border: 1, borderColor: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 6, overflow: 'hidden' }}>
+                <Box sx={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, bgcolor: 'white', borderRadius: 2, border: 1, borderColor: '#e2e8f0', boxShadow: 1 }}>
                   <Storage sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
-                  <Typography variant="subtitle2" fontWeight="bold">Generator</Typography>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>Generator</Typography>
                 </Box>
                 
                 {generatorRunning && metrics.tps > 0 && (
-                  <Box position="absolute" top={0} left={0} right={0} bottom={0} display="flex" alignItems="center" justifyContent="center">
+                  <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <div className="w-full h-1 flex justify-between px-32 space-x-4 animate-[pulse_1s_ease-in-out_infinite]">
                       <div className="w-3 h-3 rounded-full bg-blue-500 animate-[bounce_1s_infinite]"></div>
                       <div className="w-3 h-3 rounded-full bg-blue-400 animate-[bounce_1.2s_infinite]"></div>
@@ -143,14 +143,14 @@ function App() {
                   </Box>
                 )}
 
-                <Box zIndex={1} display="flex" flexDirection="column" alignItems="center" p={3} bgcolor="#eff6ff" borderRadius="50%" border={4} borderColor="#bfdbfe" boxShadow={2}>
+                <Box sx={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3, bgcolor: '#eff6ff', borderRadius: '50%', border: 4, borderColor: '#bfdbfe', boxShadow: 2 }}>
                   <Hub sx={{ fontSize: 48, color: '#1d4ed8', mb: 1 }} />
-                  <Typography variant="subtitle1" fontWeight="bold" color="#1e3a8a">Apache Kafka</Typography>
+                  <Typography variant="subtitle1" color="#1e3a8a" sx={{ fontWeight: 'bold' }}>Apache Kafka</Typography>
                 </Box>
 
-                <Box zIndex={1} display="flex" flexDirection="column" alignItems="center" p={2} bgcolor="white" borderRadius={2} border={1} borderColor="#e2e8f0" boxShadow={1}>
+                <Box sx={{ zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, bgcolor: 'white', borderRadius: 2, border: 1, borderColor: '#e2e8f0', boxShadow: 1 }}>
                   <Speed sx={{ fontSize: 40, color: '#f97316', mb: 1 }} />
-                  <Typography variant="subtitle2" fontWeight="bold">Apache Flink</Typography>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>Apache Flink</Typography>
                 </Box>
               </Box>
             </CardContent>
@@ -160,13 +160,13 @@ function App() {
         {/* Screen 3: Intelligence Dashboard (Expandable) */}
         {activeTab === 2 && (
           <Card elevation={2} sx={{ borderRadius: 2 }}>
-            <Box p={3} borderBottom={1} borderColor="#e2e8f0" bgcolor="#f8fafc" display="flex" justifyContent="space-between" alignItems="center">
-              <Typography variant="h6" fontWeight="bold">Real-Time Intelligence</Typography>
+            <Box sx={{ p: 3, borderBottom: 1, borderColor: '#e2e8f0', bgcolor: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Real-Time Intelligence</Typography>
               <Chip icon={<div className="w-2 h-2 rounded-full bg-green-500 ml-2 animate-pulse"></div>} label="Monitoring Active Stream" color="default" variant="outlined" />
             </Box>
             <CardContent sx={{ p: 0 }}>
               {alerts.length === 0 ? (
-                <Box p={6} textAlign="center">
+                <Box sx={{ p: 6, textAlign: 'center' }}>
                   <Typography color="text.secondary">No transactions processed yet. Start the generator.</Typography>
                 </Box>
               ) : (
@@ -178,16 +178,16 @@ function App() {
                   return (
                     <Accordion key={idx} disableGutters square sx={{ '&:before': { display: 'none' }, borderBottom: 1, borderColor: '#e2e8f0' }}>
                       <AccordionSummary expandIcon={<ExpandMore />}>
-                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" pr={2}>
-                          <Box display="flex" alignItems="center" gap={2}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', pr: 2 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                             <div className={`w-3 h-3 rounded-full ${isHigh ? 'bg-red-500 animate-pulse' : (isMed ? 'bg-orange-500' : 'bg-green-500')}`}></div>
-                            <Typography fontWeight="bold" sx={{ width: 140 }}>{alert.transaction_id}</Typography>
+                            <Typography sx={{ fontWeight: 'bold', width: 140 }}>{alert.transaction_id}</Typography>
                             <Typography color="text.secondary" variant="body2">{alert.reason}</Typography>
                           </Box>
-                          <Box display="flex" alignItems="center" gap={3}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                             <Chip label={alert.severity} color={color} size="small" sx={{ fontWeight: 'bold', width: 100 }} />
-                            <Box textAlign="right" width={60}>
-                              <Typography variant="h6" fontWeight="bold" color={`${color}.main`}>
+                            <Box sx={{ textAlign: 'right', width: 60 }}>
+                              <Typography variant="h6" color={`${color}.main`} sx={{ fontWeight: 'bold' }}>
                                 {Number(alert.risk_score).toFixed(1)}
                               </Typography>
                             </Box>
@@ -195,9 +195,9 @@ function App() {
                         </Box>
                       </AccordionSummary>
                       <AccordionDetails sx={{ bgcolor: '#f8fafc', borderTop: 1, borderColor: '#e2e8f0' }}>
-                        <Typography variant="subtitle2" fontWeight="bold" gutterBottom>Deep Analysis Metadata</Typography>
+                        <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold' }}>Deep Analysis Metadata</Typography>
                         <Divider sx={{ mb: 2 }} />
-                        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+                        <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                           <Typography variant="body2"><strong>Behavior Score:</strong> {Number(alert.risk_score / 5.0).toFixed(2)}</Typography>
                           <Typography variant="body2"><strong>Final Risk Score:</strong> {Number(alert.risk_score).toFixed(1)} / 100</Typography>
                           <Typography variant="body2"><strong>Trigger Reason:</strong> {alert.reason}</Typography>
