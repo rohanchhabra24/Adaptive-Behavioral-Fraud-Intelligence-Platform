@@ -212,7 +212,7 @@ function App() {
           </Card>
         )}
       </Container>
-    </div>
+    </Box>
   )
 }
 
