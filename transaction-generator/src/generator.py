@@ -27,14 +27,21 @@ def control_listener():
     consumer = KafkaConsumer(
         "system-control",
         bootstrap_servers=[KAFKA_BROKER],
-        value_deserializer=lambda x: json.loads(x.decode('utf-8')),
         auto_offset_reset='latest',
         group_id='generator-control'
     )
     logger.info("Listening for system-control signals...")
     for msg in consumer:
         try:
-            signal = msg.value.get("command", "").strip().upper()
+            payload = msg.value.decode('utf-8')
+            if payload.strip() == '"START"' or payload.strip() == 'START':
+                signal = 'START'
+            elif payload.strip() == '"STOP"' or payload.strip() == 'STOP':
+                signal = 'STOP'
+            else:
+                data = json.loads(payload)
+                signal = data.get("command", "").strip().upper()
+                
             if signal == "START":
                 IS_RUNNING = True
                 logger.info("✅ Received START signal - transactions flowing!")
