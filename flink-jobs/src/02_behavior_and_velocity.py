@@ -20,7 +20,20 @@ def main():
     t_env.execute_sql(sink_ddl)
     process_sql = """
         INSERT INTO behavior_scored
-        SELECT transaction_id, user_id, amount, location, 1 AS velocity_count, (amount / hourly_avg_spend) * 10 AS behavior_score
+        SELECT 
+            transaction_id, 
+            user_id, 
+            amount, 
+            location, 
+            COUNT(transaction_id) OVER (
+                PARTITION BY user_id 
+                ORDER BY proctime 
+                RANGE BETWEEN INTERVAL '10' MINUTE PRECEDING AND CURRENT ROW
+            ) AS velocity_count, 
+            CASE 
+                WHEN hourly_avg_spend > 0 THEN (amount / hourly_avg_spend) * 10 
+                ELSE 0.0 
+            END AS behavior_score
         FROM transaction_enriched
     """
     t_env.execute_sql(process_sql)

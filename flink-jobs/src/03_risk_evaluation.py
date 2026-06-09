@@ -22,15 +22,16 @@ def main():
         INSERT INTO fraud_alerts
         SELECT 
             transaction_id, 
-            behavior_score * 5.0 AS risk_score, 
+            (behavior_score * 3.0) + (velocity_count * 10.0) AS risk_score, 
             CASE 
-                WHEN (behavior_score * 5.0) >= 80 THEN 'HIGH RISK' 
-                WHEN (behavior_score * 5.0) >= 50 THEN 'MEDIUM RISK'
+                WHEN ((behavior_score * 3.0) + (velocity_count * 10.0)) >= 80 THEN 'HIGH RISK' 
+                WHEN ((behavior_score * 3.0) + (velocity_count * 10.0)) >= 50 THEN 'MEDIUM RISK'
                 ELSE 'LOW RISK' 
             END AS severity, 
             CASE 
-                WHEN (behavior_score * 5.0) >= 80 THEN 'High velocity anomalous spend detected'
-                WHEN (behavior_score * 5.0) >= 50 THEN 'Slightly abnormal velocity pattern'
+                WHEN velocity_count > 5 THEN 'High velocity anomalous spend detected (Rapid Transactions)'
+                WHEN ((behavior_score * 3.0) + (velocity_count * 10.0)) >= 80 THEN 'Anomalous behavior spike compared to user history'
+                WHEN ((behavior_score * 3.0) + (velocity_count * 10.0)) >= 50 THEN 'Slightly abnormal velocity pattern'
                 ELSE 'Normal behavior'
             END AS reason
         FROM behavior_scored

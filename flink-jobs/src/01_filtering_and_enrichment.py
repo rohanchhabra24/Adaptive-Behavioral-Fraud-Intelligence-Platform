@@ -20,8 +20,19 @@ def main():
     t_env.execute_sql(sink_ddl)
     process_sql = """
         INSERT INTO transaction_enriched
-        SELECT transaction_id, user_id, amount, location, is_simulated_fraud, amount * 0.8 AS hourly_avg_spend
-        FROM transaction_raw WHERE amount > 50
+        SELECT 
+            transaction_id, 
+            user_id, 
+            amount, 
+            location, 
+            is_simulated_fraud, 
+            AVG(amount) OVER (
+                PARTITION BY user_id 
+                ORDER BY ts 
+                RANGE BETWEEN INTERVAL '1' HOUR PRECEDING AND CURRENT ROW
+            ) AS hourly_avg_spend
+        FROM transaction_raw 
+        WHERE amount > 50
     """
     t_env.execute_sql(process_sql)
 if __name__ == '__main__':
