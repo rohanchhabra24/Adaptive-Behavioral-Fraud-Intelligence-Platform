@@ -5,6 +5,8 @@ def main():
     env = StreamExecutionEnvironment.get_execution_environment()
     settings = EnvironmentSettings.new_instance().in_streaming_mode().build()
     t_env = StreamTableEnvironment.create(env, environment_settings=settings)
+    t_env.get_config().get_configuration().set_string("rest.address", "jobmanager")
+    t_env.get_config().get_configuration().set_integer("rest.port", 8081)
     t_env.get_config().get_configuration().set_string("pipeline.jars", "file:///opt/flink/lib/flink-sql-connector-kafka-1.17.1.jar")
     kafka_broker = os.getenv("KAFKA_BROKER", "kafka:29092")
     source_ddl = f"""
