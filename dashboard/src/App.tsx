@@ -4,7 +4,7 @@ import {
   Button, Chip, Accordion, AccordionSummary, AccordionDetails, Divider 
 } from '@mui/material'
 import { 
-  PlayArrow, Stop, Speed, Security, Insights, ExpandMore, Router, Storage
+  PlayArrow, Stop, Speed, Security, Insights, ExpandMore, Router, Storage, Hub
 } from '@mui/icons-material'
 
 function App() {
@@ -144,7 +144,7 @@ function App() {
                 )}
 
                 <Box zIndex={1} display="flex" flexDirection="column" alignItems="center" p={3} bgcolor="#eff6ff" borderRadius="50%" border={4} borderColor="#bfdbfe" boxShadow={2}>
-                  <Network sx={{ fontSize: 48, color: '#1d4ed8', mb: 1 }} />
+                  <Hub sx={{ fontSize: 48, color: '#1d4ed8', mb: 1 }} />
                   <Typography variant="subtitle1" fontWeight="bold" color="#1e3a8a">Apache Kafka</Typography>
                 </Box>
 
