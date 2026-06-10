@@ -57,7 +57,12 @@ services:
       FRAUD_RATE: 0.05
     depends_on: [kafka]
 
-
+  ml-engine:
+    build: ./ml-engine
+    environment:
+      KAFKA_BROKER: kafka:29092
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on: [kafka]
 
   flink-jobs:
     build: ./flink-jobs

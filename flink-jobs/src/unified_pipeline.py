@@ -34,16 +34,16 @@ def main():
         )
     """)
 
-    # 2. Sink Table (Fraud Alerts)
+    # 2. Sink Table (Flink Suspects to be judged by OpenAI)
     t_env.execute_sql(f"""
-        CREATE TABLE fraud_alerts (
+        CREATE TABLE flink_suspects (
             transaction_id STRING, 
             risk_score DOUBLE, 
             severity STRING, 
             reason STRING
         ) WITH (
             'connector' = 'kafka', 
-            'topic' = 'fraud-alerts', 
+            'topic' = 'flink-suspects', 
             'properties.bootstrap.servers' = '{kafka_broker}', 
             'format' = 'json'
         )
@@ -89,7 +89,7 @@ def main():
 
     # 4. Final Insert into Sink (Executes the whole graph)
     process_sql = """
-        INSERT INTO fraud_alerts
+        INSERT INTO flink_suspects
         SELECT 
             transaction_id, 
             (behavior_score * 3.0) + (velocity_count * 10.0) AS risk_score, 
