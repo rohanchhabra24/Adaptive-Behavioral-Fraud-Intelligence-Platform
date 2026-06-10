@@ -27,7 +27,7 @@ def control_listener():
     consumer = KafkaConsumer(
         "system-control",
         bootstrap_servers=[KAFKA_BROKER],
-        auto_offset_reset='latest',
+        auto_offset_reset='earliest',
         group_id='generator-control'
     )
     logger.info("Listening for system-control signals...")
@@ -65,7 +65,8 @@ def main():
             "user_id": f"U{random.randint(1,100):04d}",
             "amount": round(random.uniform(50000, 200000), 2) if random.random() < 0.05 else round(random.uniform(10, 5000), 2),
             "location": "International" if random.random() < 0.05 else random.choice(["Delhi", "Mumbai", "Bangalore"]),
-            "timestamp": int(time.time() * 1000)
+            "timestamp": int(time.time() * 1000),
+            "is_simulated_fraud": False
         }
         producer.send("transaction-raw", value=transaction)
         producer.flush()

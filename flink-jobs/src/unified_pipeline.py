@@ -29,7 +29,7 @@ def main():
             'scan.topic-partition-discovery.interval' = '5000',
             'properties.bootstrap.servers' = '{kafka_broker}', 
             'properties.group.id' = 'flink_unified_group', 
-            'scan.startup.mode' = 'latest-offset', 
+            'scan.startup.mode' = 'earliest-offset', 
             'format' = 'json'
         )
     """)

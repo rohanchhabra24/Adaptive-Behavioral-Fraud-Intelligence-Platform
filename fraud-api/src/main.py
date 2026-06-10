@@ -15,7 +15,12 @@ metrics_state = {"total_processed": 0, "current_tps": 0, "lag": 0}
 
 def metrics_calculator():
     """Background thread to calculate True TPS by listening to transaction-raw."""
-    consumer = KafkaConsumer("transaction-raw", bootstrap_servers=[KAFKA_BROKER], auto_offset_reset='latest')
+    consumer = None
+    while consumer is None:
+        try:
+            consumer = KafkaConsumer("transaction-raw", bootstrap_servers=[KAFKA_BROKER], auto_offset_reset='latest')
+        except:
+            time.sleep(2)
     last_count = 0
     last_time = time.time()
     

@@ -42,7 +42,7 @@ def main():
         "flink-suspects",
         bootstrap_servers=[KAFKA_BROKER],
         value_deserializer=lambda x: json.loads(x.decode('utf-8')),
-        auto_offset_reset='latest',
+        auto_offset_reset='earliest',
         group_id='genai-analyst-group'
     )
     
