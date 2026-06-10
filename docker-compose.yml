@@ -36,7 +36,7 @@ services:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
-        jobmanager.memory.process.size: 512m
+        jobmanager.memory.process.size: 1024m
 
   taskmanager:
     image: flink:1.17.1-scala_2.12
