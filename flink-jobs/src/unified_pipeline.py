@@ -21,7 +21,8 @@ def main():
             `timestamp` BIGINT, 
             is_simulated_fraud BOOLEAN, 
             ts AS TO_TIMESTAMP_LTZ(`timestamp`, 3), 
-            WATERMARK FOR ts AS ts - INTERVAL '5' SECOND
+            WATERMARK FOR ts AS ts - INTERVAL '5' SECOND,
+            proctime AS PROCTIME()
         ) WITH (
             'connector' = 'kafka', 
             'topic' = 'transaction-raw', 
@@ -61,7 +62,7 @@ def main():
                 ORDER BY ts 
                 RANGE BETWEEN INTERVAL '1' HOUR PRECEDING AND CURRENT ROW
             ) AS hourly_avg_spend,
-            PROCTIME() AS proctime
+            proctime
         FROM transaction_raw 
         WHERE amount > 50
     """)
