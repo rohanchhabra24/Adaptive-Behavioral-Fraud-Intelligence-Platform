@@ -5,5 +5,4 @@ while ! curl -s http://jobmanager:8081/config > /dev/null; do
   sleep 5
 done
 echo "Flink JobManager is UP! Submitting Unified Flink AI Pipeline..."
-python src/unified_pipeline.py &
-wait
+flink run -m jobmanager:8081 -d -py src/unified_pipeline.py
