@@ -68,6 +68,8 @@ def main():
             "timestamp": int(time.time() * 1000)
         }
         producer.send("transaction-raw", value=transaction)
+        producer.flush()
+        print(f"Sent transaction: {transaction['transaction_id']}")
         time.sleep(1.0 / TPS)
 
 if __name__ == "__main__":
