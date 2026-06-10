@@ -92,7 +92,10 @@ def main():
         INSERT INTO flink_suspects
         SELECT 
             transaction_id, 
-            (behavior_score * 3.0) + (velocity_count * 10.0) AS risk_score, 
+            CASE 
+                WHEN ((behavior_score * 3.0) + (velocity_count * 10.0)) > 100.0 THEN 100.0
+                ELSE ((behavior_score * 3.0) + (velocity_count * 10.0))
+            END AS risk_score, 
             CASE 
                 WHEN ((behavior_score * 3.0) + (velocity_count * 10.0)) >= 80 THEN 'HIGH RISK' 
                 WHEN ((behavior_score * 3.0) + (velocity_count * 10.0)) >= 50 THEN 'MEDIUM RISK'
